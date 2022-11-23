@@ -1,0 +1,128 @@
+.navbar{
+  position: fixed;
+  width: 1250px;
+    z-index: 3;
+}
+.btn{
+  background-color: #eff1ff;
+}
+.p-class {
+  background-color: #eff1ff;
+  width: 420px;
+  height: 50px;
+  color: purple;
+  font-size: 11px;
+  font-weight: bolder;
+  margin-top: 100px;
+  margin-left: 20px;
+  padding: 17px;
+  border-radius: 1em;
+}
+a{
+  color: #48d38a;
+  font-size: 11px;
+  font-weight: bolder;
+  text-decoration: none;
+}
+.form{
+  width: 420px;
+  height: 70vh;
+  margin-top: 20px;
+  margin-left: 20px;
+  padding: 30px;
+}
+h2{
+  font-size: 20px;
+  font-weight: bolder;
+}
+#p-class2{
+  color: #979797;
+  font-size: 14px;
+  
+}
+input{
+  width: 300px;
+  height: 40px;
+  padding-left: 10px;
+  border-radius: 1ex;
+}
+label{
+  font-size: 13px;
+  line-height: 2.0;
+}
+#email{
+  padding-bottom: 15px;
+}
+#password{
+  padding-bottom: 10px;
+}
+span{
+  color: #979797;
+  font-size: 12px;
+  padding-bottom: 15px;
+  display: block;
+}
+span > a{
+  color: purple;
+  font-size: 12px;
+  text-decoration: none;
+}
+.btn1{
+  background-color: purple;
+  width: 150px;
+  height: 50px;
+  font-size: 15px;
+  font-weight: bolder;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+.image > img{
+  position: relative;
+  width: 430px;
+
+}
+/* .App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+.text{
+
+  font-style: italic;
+} */
