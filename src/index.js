@@ -1,15 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-// import App from './App';
-// import Kuda from './component/Kuda';
-import Home from './component/Home';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
+import Register from './Component/Pages/Register/Register'
+import PageNotFound from './Component/Pages/PageNotFound/PageNotFound';
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Register/>,
+    errorElement: PageNotFound,
+  },
+]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Home/>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 
