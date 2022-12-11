@@ -1,60 +1,89 @@
 import axios from "axios"
-import Kuda_Logo from '../../../images/Svg/Kuda-Logo.svg'
+import Kuda_Logo from "../../../images/Svg/Kuda-Logo.svg"
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Bkground from "../../../images/Svg/Background.svg"
-import { data } from "autoprefixer"
+import { toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+import { useNavigate } from "react-router-dom"
+import BigProcessingButton from "../../Pages/sharedComponenet/Button/BigProcessing"
+import SAlert from "../../Pages/sharedComponenet/Alert/Sweetalert"
 
 function Register() {
+  const redirect = useNavigate()
 
-  const [surname, setSurname] =useState("");
-  const [othernames, setOthernames] =useState("")
-  const [email, setEmail] =useState("")
-  const [phone, setPhone] =useState("")
-  const [password, setPassword] =useState("")
-  const [confirmPassword, setConfirmPassword] =useState("")
+  const [lastname, setLastname] = useState("")
+  const [othernames, setOthernames] = useState("")
+  const [email, setEmail] = useState("")
+  const [phone, setPhone] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
 
-  const [showPassword, setShowPassword] = useState("")
-  const [showConfirmPassword, setShowConfirmPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setConfirmShowPassword] = useState(false)
+  const [isSubmitting, setIsSubmmitting] = useState(0) //0=not submitted, 1=submitting, 2 for submmitted
+  const [disabledOption, setDisabledOption] = useState(false)
 
-  const showPasswordInfo = ()=> setShowPassword(!showPassword)
-  const showConfirmPasswordInfo = ()=> setShowConfirmPassword(!showConfirmPassword)
+  const showPasswordDetails = () => setShowPassword(!showPassword)
 
-  async function submitRegisterForm(e){
-      try {
-        e.preventdefault()
-        if(!surname || !othernames || !email || !phone || !password || !confirmPassword) {
-          return
-        }
+  const showConfirmPasswordDetails = () => {
+    setConfirmShowPassword(!showConfirmPassword)
+  }
 
-        const registerApiCallResponse = axios({
-          method: "post",
-          Authorization: `http://localhost:1004/register/`,
-          headers: {
-            'Content-Type': "Autorization/json"
-          },
-          data: {
-            surname: surname,
-            othernames: othernames,
-            email: email,
-            phone: phone,
-            password: password,
-            repeat_password: confirmPassword,
-          }
-        })
-          if (await registerApiCallResponse.data.status ===true){
-            alert(registerApiCallResponse.data.message)
-          }else{
-          }
+  async function submitRegisterForm(e) {
+    try {
+      e.preventDefault() //prevent the page from reload
 
-      } catch (err) {
-        alert(err.message)
+      //validation
+      if (
+        !lastname ||
+        !othernames ||
+        !email ||
+        !phone ||
+        !password ||
+        !confirmPassword ||
+        password !== confirmPassword
+      ) {
+        throw new Error("All the fields are compulsory")
       }
 
+      //pick the vlues and hit the backend
+      setIsSubmmitting(1)
+      setDisabledOption(true)
+      const registerApiCallResponse = await axios({
+        method: "post",
+        url: `http://localhost:1004/register`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: {
+          lastname: lastname,
+          othernames: othernames,
+          email: email,
+          phone: phone,
+          password: password,
+          repeat_password: confirmPassword,
+        },
+      })
+
+      setIsSubmmitting(2)
+      if (registerApiCallResponse.data.status === true) {
+        //route to VerifyEmailOtp screen
+        const objToSave = {
+          email: email,
+          phone: phone,
+        }
+        localStorage.setItem("userData", JSON.stringify(objToSave))
+        redirect("/register/verify-otp")
+      } else {
+        alert(registerApiCallResponse.data.error.message)
+      }
+    } catch (err) {
+      setIsSubmmitting(0)
+      alert(err.message)
     }
+  }
 
-
-  
   return (
     <main
       className='font-Mulish'
@@ -95,23 +124,23 @@ function Register() {
             account
           </p>
 
-          <form onsubmit ={submitRegisterForm} className='my-5'>
+          <form onSubmit={submitRegisterForm} className='my-5'>
             <div className='flex justify-between'>
               <div className=''>
                 <label htmlFor='' className='mb-5 text-sm'>
-                  Surname
+                  lastname
                 </label>
                 <br />
                 <div className='w-[20rem]'>
                   <input
                     type='text'
-                    id='Surname'
-                    name='Surname'
+                    id='lastname'
+                    name='lastname'
                     className='rounded-lg w-[20rem] h-[3rem] my-3 p-2 bg-[#dfe3ff]'
-                    placeholder='Surname'
+                    placeholder='lastname'
                     style={{ border: "none", outline: "none" }}
                     required
-                    onChange = {(e) =>setSurname(e.target.value)}
+                    onChange={(e) => setLastname(e.target.value)}
                   />
                 </div>
               </div>
@@ -130,12 +159,11 @@ function Register() {
                     placeholder='Othernames'
                     style={{ border: "none", outline: "none" }}
                     required
-                    onChange ={(e) => setOthernames(e.target.value)}
+                    onChange={(e) => setOthernames(e.target.value)}
                   />
                 </div>
               </div>
             </div>
-
             <div className='flex justify-between '>
               <div className=''>
                 <label htmlFor='' className='text-sm'>
@@ -152,7 +180,6 @@ function Register() {
                     style={{ border: "none", outline: "none" }}
                     required
                     onChange={(e) => setEmail(e.target.value)}
-
                   />
                 </div>
               </div>
@@ -171,12 +198,11 @@ function Register() {
                     placeholder='081********'
                     style={{ border: "none", outline: "none" }}
                     required
-                    onChange= {(e) =>setPhone(e.target.value)}
+                    onChange={(e) => setPhone(e.target.value)}
                   />
                 </div>
               </div>
             </div>
-
             <div className='flex justify-between'>
               <div className=''>
                 <label htmlFor='' className='text-sm'>
@@ -184,26 +210,27 @@ function Register() {
                 </label>
                 <div className='flex items-center my-3 w-[20rem] h-[3rem] justify-between bg-[#dfe3ff] rounded-lg'>
                   <input
-                    type={ showPassword ? "text" : "password"}
+                    type={showPassword ? "text" : "password"}
                     id='Password'
                     name='Password'
                     className='rounded-lg  w-[20rem] h-[3rem] p-2  bg-[#dfe3ff] '
                     placeholder='********'
                     style={{ border: "none", outline: "none" }}
                     required
-                    onChange = {(e) => setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
 
-                  { showPassword   ?(
+                  {showPassword ? (
                     <BsFillEyeSlashFill
                       className='mr-5'
-                      onClick = {showPasswordInfo}
-                    />)
-                    :(<BsFillEyeFill
+                      onClick={showPasswordDetails}
+                    />
+                  ) : (
+                    <BsFillEyeFill
                       className='mr-5'
-                      onClick = {showPasswordInfo}
-                    />)}
-                  
+                      onClick={showPasswordDetails}
+                    />
+                  )}
                 </div>
               </div>
 
@@ -214,37 +241,38 @@ function Register() {
                 <br />
                 <div className='flex items-center my-3 w-[20rem] h-[3rem] justify-between bg-[#dfe3ff] rounded-lg'>
                   <input
-                    type= { showPassword ? "text" : "password"}
-                    id='Password'
-                    name='Password'
+                    type={showConfirmPassword ? "text" : "password"}
+                    id='ResetPassword'
+                    name='ResetPassword'
                     className='rounded-lg  w-[20rem] h-[3rem] p-2  bg-[#dfe3ff] '
                     placeholder='********'
                     style={{ border: "none", outline: "none" }}
                     required
-                    onChange={(e)=> setConfirmPassword(e.target.value)}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                   />
 
-                  { showPassword  ?(
+                  {showConfirmPassword ? (
                     <BsFillEyeSlashFill
                       className='mr-5'
-                      onClick ={showConfirmPasswordInfo}
-                    />)
-                  
-                    :(<BsFillEyeFill
+                      onClick={showConfirmPasswordDetails}
+                    />
+                  ) : (
+                    <BsFillEyeFill
                       className='mr-5'
-                      onClick ={showConfirmPasswordInfo}
-                    />)}
-                  
+                      onClick={showConfirmPasswordDetails}
+                    />
+                  )}
                 </div>
               </div>
             </div>
-
-            <button
-              type='submit'
-              className='border border-[#40196d] bg-[#40196d] w-[20rem] mt-[2rem] hover:-translate-y-1 duration-700 p-2 rounded-lg text-white text-sm'
-            >
-              Register
-            </button>
+            <br />
+            <input type='checkbox' /> I agree with the terms and condition{" "}
+            <br />
+            <BigProcessingButton
+              isSubmitting={isSubmitting}
+              text='Register'
+              disabled={disabledOption}
+            />
             <p className='py-3'>
               Click{" "}
               <b>

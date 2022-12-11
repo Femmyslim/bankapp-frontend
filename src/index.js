@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
 import Register from './Component/Pages/Register/Register'
-import PageNotFound from './Component/Pages/PageNotFound/PageNotFound';
+import PageNotFound from './Component/Pages/PagesNotFound/PagesNotFound'
 
 const router = createBrowserRouter([
   {
